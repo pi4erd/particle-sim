@@ -6,11 +6,11 @@ vec2::vec2() : x(0), y(0)
 {
 }
 
-vec2::vec2(float a) : x(a), y(a)
+vec2::vec2(double a) : x(a), y(a)
 {
 }
 
-vec2::vec2(float x, float y) : x(x), y(y)
+vec2::vec2(double x, double y) : x(x), y(y)
 {
 }
 
@@ -20,7 +20,7 @@ vec2 vec2::normalized()
     return vec2(x, y) / length();
 }
 
-float vec2::length()
+double vec2::length()
 {
     return std::sqrt(x * x + y * y);
 }
@@ -49,24 +49,24 @@ vec2 vec2::operator-=(vec2 a)
     return *this;
 }
 
-vec2 vec2::operator*(float a)
+vec2 vec2::operator*(double a)
 {
     return vec2(x * a, y * a);
 }
 
-vec2 vec2::operator*=(float a)
+vec2 vec2::operator*=(double a)
 {
     x *= a;
     y *= a;
     return *this;
 }
 
-vec2 vec2::operator/(float a)
+vec2 vec2::operator/(double a)
 {
     return *this * (1 / a);
 }
 
-vec2 vec2::operator/=(float a)
+vec2 vec2::operator/=(double a)
 {
     x /= a;
     y /= a;

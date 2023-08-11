@@ -3,21 +3,21 @@
 struct vec2 {
 public:
     vec2();
-    vec2(float a);
-    vec2(float x, float y);
+    vec2(double a);
+    vec2(double x, double y);
 
-    float x, y;
+    double x, y;
 
     vec2 normalized();
-    float length();
+    double length();
 
     vec2 operator+(vec2 a);
     vec2 operator+=(vec2 a);
     vec2 operator-(vec2 a);
     vec2 operator-=(vec2 a);
 
-    vec2 operator*(float a);
-    vec2 operator*=(float a);
-    vec2 operator/(float a);
-    vec2 operator/=(float a);
+    vec2 operator*(double a);
+    vec2 operator*=(double a);
+    vec2 operator/(double a);
+    vec2 operator/=(double a);
 };

@@ -27,7 +27,7 @@ void Particle::update(float deltaTime)
     position += velocity * deltaTime;
 
     // Add slow down over time
-    velocity -= velocity * deltaTime * 0.1f;
+    velocity -= velocity * deltaTime * 0.01f;
 
     if(position.x > WINDOW_WIDTH) {
         position.x = WINDOW_WIDTH;

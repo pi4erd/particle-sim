@@ -18,6 +18,11 @@
 bool close = false;
 std::vector<Particle> particles;
 
+// DEFINES
+#define SPAWN_RADIUS 100
+#define PI_DOUBLE (double)3.141592653589
+#define FIXED_DELTA_TIME
+#define FIXED_PRECISION 240.0f // N iterations per second
 
 float randfloat() {
     return static_cast <float> (rand()) / static_cast <float> (RAND_MAX);
@@ -36,9 +41,47 @@ void spawn_particle(float x, float y) {
     p.position.x = x;
     p.position.y = y;
 
-    p.velocity = vec2(randfloat(-100, 100), randfloat(-100, 100));
+    p.velocity = vec2(randfloat(-10, 10), randfloat(-10, 10));
 
     particles.push_back(p);
+}
+
+void DrawCircle(SDL_Renderer * renderer, int32_t centreX, int32_t centreY, int32_t radius)
+{
+   const int32_t diameter = (radius * 2);
+
+   int32_t x = (radius - 1);
+   int32_t y = 0;
+   int32_t tx = 1;
+   int32_t ty = 1;
+   int32_t error = (tx - diameter);
+
+   while (x >= y)
+   {
+      //  Each of the following renders an octant of the circle
+      SDL_RenderDrawPoint(renderer, centreX + x, centreY - y);
+      SDL_RenderDrawPoint(renderer, centreX + x, centreY + y);
+      SDL_RenderDrawPoint(renderer, centreX - x, centreY - y);
+      SDL_RenderDrawPoint(renderer, centreX - x, centreY + y);
+      SDL_RenderDrawPoint(renderer, centreX + y, centreY - x);
+      SDL_RenderDrawPoint(renderer, centreX + y, centreY + x);
+      SDL_RenderDrawPoint(renderer, centreX - y, centreY - x);
+      SDL_RenderDrawPoint(renderer, centreX - y, centreY + x);
+
+      if (error <= 0)
+      {
+         ++y;
+         error += ty;
+         ty += 2;
+      }
+
+      if (error > 0)
+      {
+         --x;
+         tx += 2;
+         error += (tx - diameter);
+      }
+   }
 }
 
 void event_handler(SDL_Event& event) {
@@ -56,6 +99,14 @@ void event_handler(SDL_Event& event) {
             break;
         }
     }
+}
+
+void draw_brush(SDL_Renderer* renderer) {
+    int mx, my;
+    SDL_GetMouseState(&mx, &my);
+
+    SDL_SetRenderDrawColor(renderer, 50, 50, 50, SDL_ALPHA_OPAQUE);
+    DrawCircle(renderer, mx, my, SPAWN_RADIUS);
 }
 
 int main() {
@@ -91,14 +142,20 @@ int main() {
 
         int mx, my;
 
+
         if(SDL_GetMouseState(&mx, &my) & SDL_BUTTON_LMASK) {
-            spawn_particle(mx, my);
-            SDL_Delay(1000 / 240.0f);
+            float angle = randfloat(-PI_DOUBLE, PI_DOUBLE);
+            float rad = randfloat(SPAWN_RADIUS);
+            float xoff = cos(angle) * rad;
+            float yoff = sin(angle) * rad;
+            spawn_particle(mx + xoff, my + yoff);
         }
 
         SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0);
         SDL_RenderClear(renderer);
         
+        draw_brush(renderer);
+
         // Draw here
 
         SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
@@ -169,11 +226,12 @@ int main() {
         SDL_DestroyTexture(energyMsg);
         SDL_DestroyTexture(particlesMsg);
 
-        //SDL_Delay(1000 / 240.0f);
-
         uint32_t end = SDL_GetTicks();
-
+#ifndef FIXED_DELTA_TIME
         deltaTime = (end - start) / 1000.0f;
+#else
+        deltaTime = 1.0f / FIXED_PRECISION;
+#endif
     }
 
     // Cleanup afterwards
