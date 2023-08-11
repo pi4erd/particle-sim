@@ -1,3 +1,15 @@
+/**
+ * @file main.cpp
+ * @author pi4erd (piuuttri@gmail.com)
+ * @brief 
+ * @version 0.1
+ * @date 2023-08-11
+ * 
+ * @copyright Copyright (c) 2023
+ * 
+ * TODO: Optimize to handle thousands of particles!
+ */
+
 // CUSTOM INCLUDES
 #include "particle.hpp"
 #include "setup.h"
